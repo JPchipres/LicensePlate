@@ -1,6 +1,6 @@
 import torch
 import cv2
-
+import time
 import numpy as np
 import easyocr
 
@@ -65,10 +65,11 @@ def plot_boxes(results, frame, classes):
                 print(temp["num_plate"])
                 estado = "PLACA EXISTENTE"
                 print("PLACA EXISTE")
+                time.sleep(10)
             else:
                 estado = "PLACA NO EXISTE"
                 print("PLACA NO EXISTE")
-
+                time.sleep(5)
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)  ## box
             cv2.rectangle(frame, (x1, y1 - 20), (x2, y1), (0, 255, 0), -1)  ## Fondo para el texto
             cv2.putText(frame, f"{plate_num} | {estado}", (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2) #texto placa

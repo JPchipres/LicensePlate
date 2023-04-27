@@ -41,7 +41,7 @@
                         <th width="30%">Clase</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="residentes" class="residentes">
                         <tr>
                             <td>1</td>
                             <td>JDC-36-40</td>
@@ -89,6 +89,9 @@
                     <div>
                         <button>Nueva<br>Excepción</button>
                     </div>
+                    <div>
+                        <button type="submit" class="logoutBtn" id="logoutBtn">Cerrar<br>sesión</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -96,24 +99,9 @@
     <!--BOOTSTRAP-->
     <script src="assets/frameworks/jquery-3.6.4.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <!--FIREBASE-->
-    <script>
-        import { initializeApp } from "firebase/app";
-        import { getAnalytics } from "firebase/analytics";
-
-        const firebaseConfig = {
-        apiKey: "AIzaSyB2yVMtVd9yw7pHiS4di60hpRavqmspixc",
-        authDomain: "licensesplate.firebaseapp.com",
-        databaseURL: "https://licensesplate-default-rtdb.firebaseio.com",
-        projectId: "licensesplate",
-        storageBucket: "licensesplate.appspot.com",
-        messagingSenderId: "807762520034",
-        appId: "1:807762520034:web:7b468b96cf6d3e20df3bbb",
-        measurementId: "G-8M23H2P4Z6"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-    </script>
+    <!--CONEXION-->
+    <script type="module" src="conection.js" crossorigin="anonymous"></script>
+    <script type="module" src="app.js" crossorigin="anonymous"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </body>
 </html>

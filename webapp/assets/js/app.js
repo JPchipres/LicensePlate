@@ -213,3 +213,14 @@ $('#nuevaExcepcion').click(function() {
     `,
   })
 });
+$('#formulario').submit(function (event) {
+  event.preventDefault(); // evita el envío automático del formulario
+  var response = grecaptcha.getResponse(); // obtén la respuesta del reCAPTCHA
+  if (response.length === 0) { // si la respuesta está vacía, muestra un error
+    alert('Por favor, verifica que eres humano.');
+    return false;
+  } else {
+    // si la respuesta es válida, envía el formulario
+    this.submit();
+  }
+});

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+    <title>Bitácora General</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li class="select"><a class="select" href="main.html">Bitácora General</a></li>
+            <li><a href="bitacoraResidente.html">Bitácora Residente</a></li>
+            <li><a href="bitacoraVisitante.html">Bitácora Visitante</a></li>
+        </ul>
+        <div class="buttonContainer">
+            <button id="abrirPuerta">ABRIR PUERTA</button>
+        </div>
+    </nav>
+    <div class="information">
+        <div class="bitacora">
+            <div class="header">
+                <div class="titleContainer">
+                    <h1>Bitácora General</h1>
+                </div>
+                <div class="searchContainer">
+                    <input type="search" name="buscador" id="buscador" placeholder="Buscar una Placa">
+                    <button type="submit"><i class="bi bi-search"></i></button>
+                </div>
+            </div>
+            <div class="tableContainer">
+                <table>
+                    <thead>
+                      <tr>
+                        <th width="5%">ID</th>
+                        <th width="15%">Placa</th>
+                        <th width="25%">Fecha y Hora de Entrada</th>
+                        <th width="25%">Fecha y Hora de Salida</th>
+                        <th width="30%">Clase</th>
+                      </tr>
+                    </thead>
+                    <tbody id="datos">
+
+                    </tbody>
+                  </table>
+                  
+            </div> 
+        </div>
+        <div class="sidebarContainer">
+            <div class="sidebar">
+                <div class="titleSideContainer">
+                    <h1>Acciones <br> Rápidas</h1>
+                </div>
+                <div class="actionsContainer">
+                    <div>
+                        <button id="nuevaPlacaResidente">Nueva Placa<br>Residente</button>
+                    </div>
+                    <div>
+                        <button id="nuevaPlacaVisitante">Nueva Placa<br>Visitante</button>
+                    </div>
+                    <div>
+                        <button>Ver Bitácora<br>Residente</button>
+                    </div>
+                    <div>
+                        <button>Ver Bitácora<br>Visitante</button=>
+                    </div>
+                    <div>
+                        <button id="nuevaExcepcion">Nueva<br>Excepción</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/frameworks/jquery-3.6.4.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="assets/js/app.js"></script>
+    <script type="module" src="assets/js/index.js"></script>
+
+</body>
+</html>

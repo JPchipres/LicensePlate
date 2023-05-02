@@ -27,29 +27,45 @@ const residentesRef = collection(db, "residentes");
 const residenteRef = doc(residentesRef, residentID);
 
 // Verificar si el documento existe antes de agregar un nuevo vehículo
-getDoc(residenteRef).then((docSnapshot) => {
+getDoc(residenteRef).then((docSnapshot) => { 
   if (docSnapshot.exists()) {
     const vehiculosRef = collection(residenteRef, "vehiculos");
     
     const nuevoVehiculo = {
-      placa: placa
+      placa: placa,
     };
-
     // Agrega un nuevo documento a la subcolección "vehiculos", con la opción {merge: false} para evitar la creación de un nuevo documento si el ID no existe
     addDoc(vehiculosRef, nuevoVehiculo,{merge: false})
       .then((docRef) => {
-        console.log("Nuevo vehículo agregado con ID:", docRef.id);
-        
+        Swal.fire({
+          icon: 'success',
+          title:'¡Actualización Exitosa!',
+          text: `La placa: ${nuevoVehiculo.placa} se almacenó correctamente al residente con el ID: ${docRef.id}`,
+          showConfirmButton: false,
+          background:'#2c2c2c',
+          timer: 2000,
+        })
       })
       .catch((error) => {
-        console.log("Error al agregar vehículo:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Ops...',
+          text: 'Algo salió mal, por favor intentelo de nuevo',
+          footer: `${error}`,
+          timer: 2000,
+        })
       });
   } else {
-    console.log(`El documento con ID ${residentID} no existe en la colección 'residentes'. No se ha agregado el vehículo.`);
+    Swal.fire({
+      icon: 'error',
+      title: '¡Inconsistencia!',
+      text: `El documento con ID ${residentID} no existe en la colección 'residentes'. No se ha agregado el vehículo.`,
+      timer:2000
+    })
   }
-}).catch((error) => {
-  console.log(`Error al verificar la existencia del documento ${residentID}: ${error}`);
-});
+  }).catch((error) => {
+    console.log(`Error al verificar la existencia del documento ${residentID}: ${error}`);
+  });
 
 };
 

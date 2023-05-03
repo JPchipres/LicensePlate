@@ -55,7 +55,7 @@ if(residentSignin){
                         icon: 'error',
                         title: 'Verificar si eres robot',
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2000
                       })
                 } else {
                   window.location.href = 'main.html';
@@ -68,7 +68,7 @@ if(residentSignin){
                 icon: 'error',
                 title: 'Datos Incorrectos',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 2000
               })
             console.log(error.code, error.message);
         });
@@ -81,7 +81,7 @@ if(logoutBtn){
     logoutBtn.addEventListener('click', (e) => {
         e.preventDefault();
         signOut(auth).then(() => {
-            window.location.href = "./webapp";
+            window.location.href = "index.html";
         }).catch((error) => {
             console.log(error.code, error.message);
         });

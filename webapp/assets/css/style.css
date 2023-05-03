@@ -471,6 +471,26 @@ tbody > tr:nth-child(even){/*Los tr hijos directos de tbody y que a su vez sean 
 .swal2-validation-message {
   background-color: var(--color-primary) !important;
 }
+#cap {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background-color: var(--color-primary);
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+}
+#inputCap{
+  width: 100%;
+  margin-top: 3rem;
+  transform: translate(18%, 0%);
+}
+#inputCap2{
+  margin-top: 8rem;
+  width: 50%;
+  transform: translate(50%, 5%);
+}
 /*
  .swal2-active-progress-step{
   background-color: var(--color-titles) !important;

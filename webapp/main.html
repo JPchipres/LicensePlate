@@ -41,8 +41,8 @@
                         <th width="30%">Clase</th>
                       </tr>
                     </thead>
-                    <tbody id="datos">
-
+                    <tbody>
+                        
                     </tbody>
                   </table>
                   
@@ -55,28 +55,36 @@
                 </div>
                 <div class="actionsContainer">
                     <div>
-                        <button id="nuevaPlacaResidente">Nueva Placa<br>Residente</button>
+                        <button id="abrirPuerta">Nueva Placa<br>Residente</button>
                     </div>
                     <div>
-                        <button id="nuevaPlacaVisitante">Nueva Placa<br>Visitante</button>
+                        <button>Nueva Placa<br>Visitante</button>
                     </div>
                     <div>
                         <button>Ver Bitácora<br>Residente</button>
                     </div>
                     <div>
-                        <button>Ver Bitácora<br>Visitante</button=>
+                        <button>Ver Bitácora<br>Visitante</button>
                     </div>
                     <div>
-                        <button id="nuevaExcepcion">Nueva<br>Excepción</button>
+                        <button>Nueva<br>Excepción</button>
+                    </div>
+                    <div>
+                        <button type="submit" class="logoutBtn" id="logoutBtn">Cerrar<br>sesión</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!--BOOTSTRAP-->
     <script src="assets/frameworks/jquery-3.6.4.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="assets/js/app.js"></script>
-    <script type="module" src="assets/js/index.js"></script>
-
+    <!--FIREBASE-->
+    <script type="module" src="assets/js/firebase.js" crossorigin="anonymous"></script>
+    <script src="assets/js/app.js" crossorigin="anonymous"></script>
+    <!--<script type="module" src="assets/js/index.js" crossorigin="anonymous"></script>-->
+    <script type="module" src="assets/js/login.js" crossorigin="anonymous"></script>
+    <script type="module" src="assets/js/list.js" crossorigin="anonymous"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </body>
 </html>

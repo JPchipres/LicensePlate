@@ -1,26 +1,26 @@
-import {setPlateResident, getData} from './firebase.js' 
+import {setPlateResident, setNewException, getData} from './firebase.js' 
 
 const table = document.getElementById('datos');
 
 window.addEventListener('DOMContentLoaded', async () =>{
+
   const querySnapshot = await getData()
+  let i = 1
   
   let html = ''
 
   querySnapshot.forEach(data => {
     const doc = data.data()
+    const num = i++
     const timestamp = doc.admission
     const date = timestamp.toDate()
-    const fechaHora = date.toLocaleString()
-    const timestamp1 = doc.departure
-    const date1 = timestamp1.toDate()
-    const fechSalida = date1.toLocaleString()
+    const fechaEntrada = date.toLocaleString()
     html += `
               <tr> 
-                  <td>${data.id}</td>
+                  <td>${num}</td>
                   <td>${doc.placa}</td>
-                  <td>${fechaHora}</td>
-                  <td>${fechSalida}</td>
+                  <td>${fechaEntrada}</td>
+                  <td>${doc.estado}</td>
                   <td>${doc.clase}</td>
               </tr>
           `
@@ -56,21 +56,27 @@ $('#nuevaPlacaResidente').click(function() {
         }else if(value.length <9){
           return 'Este campo está incompleto';
         }
-      }
+      },
+      footer: "El formato a seguir es: AAA-00-00"
     },
     {
       input:'text',
       title: 'ID del Residente',
+      inputAttributes: {
+        maxlength:10,
+        minlength:10
+      },
       text: 'Escriba el ID del residente al que se le asignará la placa',
       inputValidator: (value) => {
         if (!value) {
           return 'Este campo es requerido';
+        }else if(value.length <9){
+          return 'Este campo está incompleto';
         }
       },
-      footer:'El ID residente debe tener 8 dígitos númericos.',
-
+      footer:'El ID residente debe ser el numero de telefono registrado',
     }
-  ]).then((data) => {
+  ]).then(data => {
     
     if(data.value) {
       const placa = data.value[0]
@@ -180,44 +186,97 @@ $('#nuevaPlacaVisitante').click(function() {
 });
 
 $('#nuevaExcepcion').click(function() {
-  Swal.fire({
-    title:'Nueva Excepción',
-    // footer:'xxx',
-    width:'70%',
-    focusConfirm:false,
+  Swal.mixin({
     background:'#2c2c2c',
-    showConfirmButton:true,
-    confirmButtonText:'Crear Excepción.',
-    cancelButtonText:'Cancelar.',
-    showCancelButton:true,
+    cancelButtonText:'Cancelar',
+    confirmButtonText: 'Siguiente',
     confirmButtonColor:'#198754',
+    showCancelButton: true,
     cancelButtonColor:'#dc3545',
-    returnInputValueOnDeny: true,
-    html: `
-            <div class="formExeption">
-              <section>
-                <label for="opciones">Seleccione el tipo de excepción:</label> <br>
-                  <select id="opciones" name="opciones">
-                    <option value="opcion0" selected disabled>Ver opciones...</option>
-                    <option value="opcion1">Paquetería.</option>
-                    <option value="opcion2">Basurero.</option>
-                    <option value="opcion3">Distribuidor.</option>
-                    <option value="opcion4">Visita Inesperada.</option>
-                    <option value="opcion5">Otro.</option>
-                    </select>
-              </section>
-              <section>
-                <label for="nPlaca">Numero de la Placa:</label> <br>  
-                <input type="text" id="nPlaca" name="nPlaca" placeholder="Ingrese los dígitos de la placa">
-              </section>
-              <section class="section3">
-                <label for="descripcion">Descripción:</label> <br>
-                <input type="text" id="descripcion" name="descripcion" placeholder="Ingrese una descripción"><br>
-              </section>
-            </div>
-    `,
+    allowOutsideClick:false,
+    allowEscapeKey:false
+  }).queue([
+    {
+      title: 'Tipo de Excepción',
+      text: 'Seleccione el tipo de excepción a registrar',
+      input: 'select',
+      inputPlaceholder: 'Selecccione una opcion',
+      inputOptions:{
+        Paqueteria : "Paquetería.",
+        Basura : "Basura.",
+        Repartidor : "Repartidor.",
+        Visita:"Visita Inesperada.",
+        Distribuidor: "Distribuidor.",
+        Otro: "Otro."
+      },
+      inputValidator: (value) => {
+        if (!value) {
+          return 'Este campo es requerido';
+        }
+      }
+    },
+    {
+      input:'text',
+      title: 'Descripción',
+      text: 'Escriba una descripción del vehículo y cantidad de personas que transporta:',
+      inputValidator: (value) => {
+        if (!value) {
+          return 'Este campo es requerido';
+        }
+      }
+    },{
+      input: 'text',
+      title: 'Placa Excepción',
+      text: 'Escriba los dígitos de la placa del vehiculo excepción:',
+      inputAttributes:{
+        minlength: 9,
+        maxlength: 9
+      },
+      inputValidator: (value) => {
+        if (!value) {
+          return 'Este campo es requerido';
+        }else if(value.length <9){
+          return 'Este campo está incompleto';
+        }
+      }
+    }
+  ]).then(data => {
+    
+    if(data.value) {
+      const tipo = data.value[0]
+      const descripcion = data.value[1]
+      const placa = data.value[2]
+      Swal.fire({
+        icon:'info',
+        title: 'Confirmación',
+        html: `
+            ¿Desea dar de alta la excepción de tipo <small>${tipo}</small>, con la placa <small>${placa}</small>?
+        `,
+        background:'#2c2c2c',
+        confirmButtonColor:'#198754',
+        confirmButtonText: 'Dar de alta',
+        cancelButtonText:'Cancelar',
+        showCancelButton:true,
+        cancelButtonColor:'#dc3545',
+        allowOutsideClick:false,
+        allowEscapeKey:false,
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+            }, 2000); // Simulación de una operación asincrónica
+          });
+        }
+      }).then((data) => {
+        if(data.isConfirmed){
+          setNewException(tipo, placa, descripcion)
+        }
+      })
+    }
   })
 });
+
 
 $('#abrirPuerta').click(function() {
   let timerInterval

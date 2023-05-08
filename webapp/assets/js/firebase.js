@@ -22,7 +22,7 @@ const db = getFirestore(app)
 window.addEventListener('DOMContentLoaded', async () => {
 
   // Obtén una referencia a la colección "tuColeccion" en Firestore
-  const tuColeccion = collection(db, 'placas');
+  const tuColeccion = collection(db, 'registro');
   const q = query(tuColeccion);
 
   // Agrega un listener que se ejecutará cada vez que se agregue, modifique o elimine un documento en la colección
@@ -41,14 +41,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     snapshot.forEach(data => {
       const doc = data.data();
       const num = i++;
-      const timestamp = doc.admission;
+      const timestamp = doc.fecha_hora;
       const date = timestamp.toDate();
-      const fechaEntrada = date.toLocaleString();
+      const fechaHora = date.toLocaleString();
       html += `
         <tr> 
           <td>${num}</td>
           <td>${doc.placa}</td>
-          <td>${fechaEntrada}</td>
+          <td>${fechaHora}</td>
           <td>${doc.estado}</td>
           <td>${doc.clase}</td>
         </tr>

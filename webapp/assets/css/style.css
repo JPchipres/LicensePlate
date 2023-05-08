@@ -264,7 +264,7 @@ nav button {
   background-color: var(--color-secondary);
   border-radius: var(--border-radius-large);
   height: 62rem;
-  margin-bottom: 2rem;
+  /* margin-bottom: 2rem; */
 }
 .header {
   display: grid;
@@ -411,7 +411,7 @@ tbody > tr:nth-child(even){/*Los tr hijos directos de tbody y que a su vez sean 
 .actionsContainer button{
   font-family: 'Roboto',sans-serif;
   font-size: var(--font-size-subtitle);
-  width: 70%;
+  width: 60%;
   padding: 1rem 0;
   border-radius: var(--border-radius-small);
   background-color: var(--color-tertiary);
@@ -473,6 +473,12 @@ tbody > tr:nth-child(even){/*Los tr hijos directos de tbody y que a su vez sean 
 }
 small {
   color: var(--color-titles);
+}
+.capitalize {
+  text-transform: capitalize;
+}
+.uppercase {
+  text-transform: uppercase;
 }
 /*
  .swal2-active-progress-step{

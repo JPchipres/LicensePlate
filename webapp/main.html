@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
     <title>Bitácora General</title>
 </head>
 <body>
@@ -26,12 +27,12 @@
                     <h1>Bitácora General</h1>
                 </div>
                 <div class="searchContainer">
-                    <input type="search" name="buscador" id="buscador" placeholder="Buscar una Placa">
+                    <input class="buscador" type="search" name="buscador" id="buscador" placeholder="Buscar una Placa">
                     <button type="submit"><i class="bi bi-search"></i></button>
                 </div>
             </div>
-            <div class="tableContainer">
-                <table>
+            <div class="tableContainer" id="tableContainer">
+                <table id="table" class="table">
                     <thead>
                       <tr>
                         <th width="5%">ID</th>
@@ -44,8 +45,7 @@
                     <tbody>
                         
                     </tbody>
-                  </table>
-                  
+                </table>    
             </div> 
         </div>
         <div class="sidebarContainer">
@@ -55,19 +55,19 @@
                 </div>
                 <div class="actionsContainer">
                     <div>
-                        <button id="abrirPuerta">Nueva Placa<br>Residente</button>
+                        <button id="nuevaPlacaResidente">Nueva Placa<br>Residente</button>
                     </div>
                     <div>
-                        <button>Nueva Placa<br>Visitante</button>
+                        <button id="nuevaPlacaVisitante">Nueva Placa<br>Visitante</button>
                     </div>
                     <div>
-                        <button>Ver Bitácora<br>Residente</button>
+                        <button id="">Ver Bitácora<br>Residente</button>
                     </div>
                     <div>
                         <button>Ver Bitácora<br>Visitante</button>
                     </div>
                     <div>
-                        <button>Nueva<br>Excepción</button>
+                        <button id="nuevaExcepcion">Nueva<br>Excepción</button>
                     </div>
                     <div>
                         <button type="submit" class="logoutBtn" id="logoutBtn">Cerrar<br>sesión</button>
@@ -86,5 +86,14 @@
     <script type="module" src="assets/js/login.js" crossorigin="anonymous"></script>
     <script type="module" src="assets/js/list.js" crossorigin="anonymous"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!--DATATABLE-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script>
+        
+    </script>
+      
+
 </body>
 </html>

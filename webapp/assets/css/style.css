@@ -502,4 +502,6 @@ tbody > tr:nth-child(even){/*Los tr hijos directos de tbody y que a su vez sean 
   text-align: center;
 } */
 
-
+.filter{ /*Clase para el buscador*/
+  display: none;
+}

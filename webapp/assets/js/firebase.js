@@ -20,6 +20,11 @@ const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 const postList = document.querySelector('.tableContainer');
 window.addEventListener('DOMContentLoaded', async () => {
+  const itemsPerPage = 5; // Número de elementos por página
+  let currentPage = 1; // Página actual
+  let totalItems = 0;
+  let totalPages = 0;
+  let currentItems = [];
 
   // Obtén una referencia a la colección "tuColeccion" en Firestore
   const tuColeccion = collection(db, 'registro');
@@ -27,20 +32,24 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   // Agrega un listener que se ejecutará cada vez que se agregue, modifique o elimine un documento en la colección
   onSnapshot(q, (snapshot) => {
-
+    totalItems = snapshot.size;
+    totalPages = Math.ceil(totalItems / itemsPerPage);
     let i = 1;
     let html = '';
 
-    if(snapshot.size > 0){
-      let html = '';
+    if (snapshot.empty) {
+      html = '<tr><td colspan="5">No hay entradas aún</td></tr>';
+      table.innerHTML = html;
+    }
     // Recorre los documentos de la colección y actualiza la tabla con los datos actualizados
+    currentItems = [];
     snapshot.forEach(data => {
       const placa = data.data().placa;
       const num = i++;
       const fechaHora = data.data().fecha_hora;
       const estado = data.data().estado;
       const clase = data.data().clase;
-      const tr = `
+      currentItems.push(`
         <tr class="data"> 
           <td>${num}</td>
           <td>${placa}</td>
@@ -48,32 +57,83 @@ window.addEventListener('DOMContentLoaded', async () => {
           <td>${estado}</td>
           <td>${clase}</td>
         </tr>
-      `
-      html += tr;
+      `);
+  });
+  updateTable();
+  updatePagination();
+});
+function updateTable() {
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const itemsToShow = currentItems.slice(startIndex, endIndex);
+  table.innerHTML = itemsToShow.join('');
+}
+
+function updatePagination() {
+  const prevButton = document.getElementById('prevButton');
+  const nextButton = document.getElementById('nextButton');
+  const currentPageSpan = document.getElementById('currentPage');
+  const paginationContainer = document.getElementById('paginationContainer');
+  currentPageSpan.innerText = currentPage.toString();
+
+  while (paginationContainer.firstChild) {
+    paginationContainer.firstChild.remove();
+  }
+  const paginationList = document.createElement('ul');
+  paginationList.classList.add('pagination');
+
+  const prevItem = createPaginationItem('Anterior', currentPage > 1, () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
+  });
+  paginationList.appendChild(prevItem);
+
+  for (let page = 1; page <= totalPages; page++) {
+    const pageItem = createPaginationItem(page.toString(), page !== currentPage, () => {
+      if (page !== currentPage) {
+        goToPage(page);
+      }
     });
-    postList.innerHTML = 
-    `<div class="tableContainer">
-        <table id="table" class="table">
-           <thead>
-             <tr>
-              <th width="5%">ID</th>
-              <th width="15%">Placa</th>
-              <th width="30%">Fecha y Hora</th>
-              <th width="30%">Estado</th>
-              <th width="20%">Clase</th>
-             </tr>
-           </thead>
-           <tbody>
-                ${html}
-           </tbody>
-        </table>
-    </div> `;
-  }else{
-    postList.innerHTML = '<h1 class="text-center">No hay placas en registro</h1>'
-};
+    paginationList.appendChild(pageItem);
+  }
+  const nextItem = createPaginationItem('Siguiente', currentPage < totalPages, () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  });
+  paginationList.appendChild(nextItem);
+  paginationContainer.appendChild(paginationList);
 
-    // Actualiza la tabla con los datos actualizados
+  function createPaginationItem(text, enabled, onClick) {
+    const listItem = document.createElement('li');
+    listItem.classList.add('page-item');
+    const link = document.createElement('a');
+    link.classList.add('page-link');
+    link.href = '#';
+    link.innerText = text;
+    link.addEventListener('click', onClick);
 
+    if (!enabled) {
+      listItem.classList.add('disabled');
+    }
+
+    listItem.appendChild(link);
+
+    return listItem;
+  }
+}
+
+function goToPage(page) {
+  currentPage = page;
+  updateTable();
+  updatePagination();
+}
+
+document.getElementById('nextButton').addEventListener('click', () => {
+  if (currentPage < totalPages) {
+  goToPage(currentPage + 1);
+  }
   });
 });
 

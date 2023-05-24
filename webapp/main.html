@@ -26,13 +26,13 @@
                     <h1>BÍTACORA GENERAL</h1>
                 </div>
                 <div class="searchContainer">
-                    <input type="search" name="buscador" id="buscador" placeholder="Buscar una Placa">
+                    <input class="buscador" type="search" name="buscador" id="buscador" placeholder="Buscar una Placa">
                     <button type="submit"><i class="bi bi-search"></i></button>
                 </div>
             </div>
-            <div class="tableContainer">
-                <table>
-                    <thead>
+            <div class="tableContainer" id="tableContainer">
+                <table id="table" class="table">
+                    <thead> 
                       <tr>
                         <th width="5%">ID</th>
                         <th width="15%">Placa</th>
@@ -41,7 +41,7 @@
                         <th width="20%">Clase</th>
                       </tr>
                     </thead>
-                    <tbody id="datos">
+                    <tbody>
 
                     </tbody>
                   </table>
@@ -58,7 +58,7 @@
                         <button id="nuevaPlacaResidente">Nueva Placa<br>Residente</button>
                         <button id="nuevaPlacaVisitante">Nueva Placa<br>Visitante</button>
                         <button id="nuevaExcepcion">Nueva<br>Excepción</button>
-                        <button>Cerrar <br> Sesión</button>
+                        <button onclick="location.href='index.html';">Cerrar <br> Sesión</button>
                 </div>
             </div>
         </div>
@@ -68,6 +68,6 @@
     <script type="module" src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js"></script>
     <script type="module" src="assets/js/firebase.js"></script>
     <script type="module" src="assets/js/alerts.js"></script>
-
+    <script type="module" src="assets/js/list.js"></script>
 </body>
 </html>

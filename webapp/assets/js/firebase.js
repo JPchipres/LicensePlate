@@ -18,11 +18,11 @@ const table = document.getElementById('datos');
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
-
+const postList = document.querySelector('.tableContainer');
 window.addEventListener('DOMContentLoaded', async () => {
 
   // Obtén una referencia a la colección "tuColeccion" en Firestore
-  const tuColeccion = collection(db, 'placas');
+  const tuColeccion = collection(db, 'registro');
   const q = query(tuColeccion);
 
   // Agrega un listener que se ejecutará cada vez que se agregue, modifique o elimine un documento en la colección
@@ -31,36 +31,51 @@ window.addEventListener('DOMContentLoaded', async () => {
     let i = 1;
     let html = '';
 
-    if(snapshot.empty){
-      html = '<tr><td colspan="5">No hay entradas aún</td></tr>'
-      table.innerHTML = html;
-    }
-
-
+    if(snapshot.size > 0){
+      let html = '';
     // Recorre los documentos de la colección y actualiza la tabla con los datos actualizados
     snapshot.forEach(data => {
-      const doc = data.data();
+      const placa = data.data().placa;
       const num = i++;
-      const timestamp = doc.admission;
-      const date = timestamp.toDate();
-      const fechaEntrada = date.toLocaleString();
-      html += `
-        <tr> 
+      const fechaHora = data.data().fecha_hora;
+      const estado = data.data().estado;
+      const clase = data.data().clase;
+      const tr = `
+        <tr class="data"> 
           <td>${num}</td>
-          <td>${doc.placa}</td>
-          <td>${fechaEntrada}</td>
-          <td>${doc.estado}</td>
-          <td>${doc.clase}</td>
+          <td>${placa}</td>
+          <td>${fechaHora.toDate().toLocaleDateString()}, ${fechaHora.toDate().getHours()}:${fechaHora.toDate().getMinutes()}</td>
+          <td>${estado}</td>
+          <td>${clase}</td>
         </tr>
       `
-      
+      html += tr;
     });
+    postList.innerHTML = 
+    `<div class="tableContainer">
+        <table id="table" class="table">
+           <thead>
+             <tr>
+              <th width="5%">ID</th>
+              <th width="15%">Placa</th>
+              <th width="30%">Fecha y Hora</th>
+              <th width="30%">Estado</th>
+              <th width="20%">Clase</th>
+             </tr>
+           </thead>
+           <tbody>
+                ${html}
+           </tbody>
+        </table>
+    </div> `;
+  }else{
+    postList.innerHTML = '<h1 class="text-center">No hay placas en registro</h1>'
+};
 
     // Actualiza la tabla con los datos actualizados
-    table.innerHTML = html;
+
   });
 });
-
 
 // Funcion que trae los datos de la bd
 export const getData = () =>  getDocs(collection(db, 'placas'))
@@ -75,10 +90,18 @@ export const setPlateResident = (placa, residentID) => {
     .then((docSnapshot) => {
       if (docSnapshot.exists()) {
         const vehiculosRef = collection(residenteRef, "vehiculos");
-
         const nuevoVehiculo = {
           placa : placa,
-          estado : 1,
+          permiso : 1
+        };
+        const nuevoRegistro = {
+          admission : new Date().toISOString(),
+          clase : "RESIDENTE",
+          descripcion : "",
+          estado : "Ingreso",
+          hora_salida : new Date().toISOString(),
+          placa : placa,
+          permiso : 1
         };
  
         // Establece un documento con el ID personalizado vehiculoID en la subcolección "vehiculos"
@@ -90,8 +113,28 @@ export const setPlateResident = (placa, residentID) => {
               text: `La placa: ${nuevoVehiculo.placa} se almacenó correctamente al residente con el ID: ${residentID}`,
               showConfirmButton: false,
               background: "#2c2c2c",
+              timer: 4000,
+            });
+            setDoc(doc(db,"placas",placa), nuevoRegistro)
+            .then(() => {
+            Swal.fire({
+              icon: "success",
+              title: "¡Registrado Exitosamente!",
+              text: `La placa: ${nuevoVehiculo.placa} se almacenó correctamente en placas con el ID: ${residentID}`,
+              showConfirmButton: false,
+              background: "#2c2c2c",
               timer: 2000,
             });
+          })
+          .catch((error) => {
+            Swal.fire({
+              icon: "error",
+              title: "Ops...",
+              text: "Algo salió mal, por favor intentelo de nuevo",
+              footer: `${error}`,
+              background: "#2c2c2c",
+            });
+          });
           })
           .catch((error) => {
             Swal.fire({
@@ -124,7 +167,6 @@ export const setPlateResident = (placa, residentID) => {
       });
     });
 }
-
 // Funcion que almacena una nueva entrada de excepcion dentro de la base de datos
 export const setNewException = (tipo, placa, descripcion) => {
   const placasRef = collection(db,'placas')
@@ -133,10 +175,12 @@ export const setNewException = (tipo, placa, descripcion) => {
 
   const nuevaExcepcion = {
     admission : fechaHoraActual,
-    descripcion : descripcion,
-    placa : placa,
     clase : tipo,
-    estado : estado
+    descripcion : descripcion,
+    estado : estado,
+    hora_salida : fechaHoraActual,
+    placa : placa,
+    permiso : 1
   }
   setDoc(doc(placasRef,placa),nuevaExcepcion)
   .then(() => {
@@ -175,7 +219,7 @@ export const newResident = (nombre,casa,email,telefono) => {
   
   const residentesRef = collection(db, "residentes");
   const docRef = doc(residentesRef,telefono)
-  
+
   const nuevoResidente = {
     phone : telefono,
     name : nombre,
@@ -233,10 +277,18 @@ export const setPlateVisit = (placa, residentID) => {
         const vehiculosRef = collection(residenteRef, "visitantes");
 
         const nuevaVisita = {
-          placa: placa,
-          status: 1,
+          placa : placa,
+          permiso : 1,
         };
- 
+        const nuevoRegistro = {
+          admission : new Date().toISOString(),
+          clase : "VISITANTE",
+          descripcion : "",
+          estado : "Ingreso",
+          hora_salida : new Date().toISOString(),
+          placa : placa,
+          permiso : 1
+        };
         // Establece un documento con el ID personalizado vehiculoID en la subcolección "vehiculos"
         setDoc(doc(vehiculosRef, placa), nuevaVisita)
           .then(() => {
@@ -248,6 +300,25 @@ export const setPlateVisit = (placa, residentID) => {
               background: "#2c2c2c",
               timer: 2000,
             });
+            setDoc(doc(db,"placas",placa), nuevoRegistro)
+            .then(() => {
+              Swal.fire({
+                icon: "success",
+                title: "¡Actualización Exitosa!",
+                text: `La placa: ${nuevaVisita.placa} se almacenó correctamente en placas`,
+                showConfirmButton: false,
+                background: "#2c2c2c",
+                timer: 2000,
+              });
+          }).catch((error) => {
+            Swal.fire({
+              icon: "error",
+              title: "Ops...",
+              text: "Algo salió mal, por favor intentelo de nuevo",
+              footer: `${error}`,
+              background: "#2c2c2c",
+            });
+          });
           })
           .catch((error) => {
             Swal.fire({

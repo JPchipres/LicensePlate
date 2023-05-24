@@ -9,12 +9,14 @@ db= firestore.client()
 
 #.where("campo", "condicional", "objetivo")
 temp = ''
-searchs = db.collection('placas').where("num_plate", "==", "NJC-37-0").get()
+searchs = db.collection('placas').where("placa", "==", "AAA-00-00").get()
 for search in searchs:
     temp = search.to_dict()
+    print(temp)
+
 
 if temp != '':
-    print(temp["num_plate"])
+    print(temp["placa"])
 else:
     print("no existe")
 

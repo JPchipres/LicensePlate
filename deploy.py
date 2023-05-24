@@ -1,9 +1,9 @@
 import torch
 import cv2
-import time
+
 import numpy as np
 import easyocr
-
+import datetime
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -57,19 +57,60 @@ def plot_boxes(results, frame, classes):
 
             plate_num = recognize_plate_easyocr(img=frame, coords=coords, reader=EASY_OCR, region_threshold=OCR_TH)
             temp = ''
-            searchs = db.collection('placas').where("num_plate", "==", plate_num).get()
+            estado_in = 'Ingreso'
+            estado_old = 'Salio'
+            searchs = db.collection('placas').where("placa", "==", plate_num).get()
             for search in searchs:
                 temp = search.to_dict()
 
             if temp != '':
-                print(temp["num_plate"])
-                estado = "PLACA EXISTENTE"
                 print("PLACA EXISTE")
-                time.sleep(10)
+                estado = temp["estado"]
+                estado_check = str(estado)
+                # INGRESO
+                if estado_check.lower() == estado_in.lower():
+                    estado = temp["estado"]
+                    clase = temp["clase"]
+                    hora_salida = temp["hora_salida"]
+                    dess = temp["descripcion"]
+                    plac = temp["placa"]
+                    # ACTUALIZAR FECHA DE SALIDA Y ESTATUS
+                    update = db.collection(u'placas').document(u'{}'.format(plac))
+                    update.update(
+                        {u'estado': u'Salio', u'hora_salida': datetime.datetime.now(tz=datetime.timezone.utc)})
+                    data = {
+                        u'fecha_hora': datetime.datetime.now(tz=datetime.timezone.utc),
+                        u'clase': u'{}'.format(clase),
+                        u'descripcion': u'{}'.format(dess),
+                        u'estado': u'Salio',
+                        u'placa': u'{}'.format(plac)
+                    }
+                    print(data)
+                    db.collection(u'registro').add(data)
+                # SALIO
+                if estado_check.lower() == estado_old.lower():
+                    estado = temp["estado"]
+                    clase = temp["clase"]
+                    hora_salida = temp["hora_salida"]
+                    dess = temp["descripcion"]
+                    plac = temp["placa"]
+                    # ACTUALIZAR ADMISSION Y ESTATUS
+                    update = db.collection(u'placas').document(u'{}'.format(plac))
+                    update.update(
+                        {u'estado': u'Ingreso', u'admission': datetime.datetime.now(tz=datetime.timezone.utc)})
+                    data = {
+                        u'fecha_hora': datetime.datetime.now(tz=datetime.timezone.utc),
+                        u'clase': u'{}'.format(clase),
+                        u'descripcion': u'{}'.format(dess),
+                        u'estado': u'Ingreso',
+                        u'placa': u'{}'.format(plac)
+                    }
+                    print(data)
+                    db.collection(u'registro').add(data)
             else:
                 estado = "PLACA NO EXISTE"
                 print("PLACA NO EXISTE")
-                time.sleep(5)
+
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)  ## box
             cv2.rectangle(frame, (x1, y1 - 20), (x2, y1), (0, 255, 0), -1)  ## Fondo para el texto
             cv2.putText(frame, f"{plate_num} | {estado}", (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2) #texto placa

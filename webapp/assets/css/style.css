@@ -264,7 +264,7 @@ nav button {
   background-color: var(--color-secondary);
   border-radius: var(--border-radius-large);
   height: 62rem;
-  margin-bottom: 2rem;
+  /* margin-bottom: 2rem; */
 }
 .header {
   display: grid;
@@ -408,11 +408,11 @@ tbody > tr:nth-child(even){/*Los tr hijos directos de tbody y que a su vez sean 
   width: 100%;
   height: 90%;
 }
-.actionsContainer button {
-  padding: 1rem 5rem;
+.actionsContainer button{
   font-family: 'Roboto',sans-serif;
   font-size: var(--font-size-subtitle);
-  /* width: 100%; */
+  width: 60%;
+  padding: 1rem 0;
   border-radius: var(--border-radius-small);
   background-color: var(--color-tertiary);
   border: none;
@@ -441,8 +441,8 @@ tbody > tr:nth-child(even){/*Los tr hijos directos de tbody y que a su vez sean 
 .formExeption input[type="text"], select {
   width: 100%;
   height: 5rem;
-  background-color: var(--color-inputs);
-  border: none;
+  background-color: rgba(0, 0, 0, 0); 
+  border: solid 1px rgba(255,255,255);
   border-radius: 5px 5px;
   padding: 0rem 1rem;
   font-size: var(--font-size-subtitle);
@@ -454,23 +454,10 @@ tbody > tr:nth-child(even){/*Los tr hijos directos de tbody y que a su vez sean 
 }
 .formExeption input[type="text"]{
   font-size: 1.9rem;
-  color: #FFFFFF;
+  /* color: #FFFFFF; */
 }
 
-
-
-.swal2-popup {
-  font-size: 16px !important;
-}
-.swal2-title {
-  color: #FFAA04 !important;
-}
-.swal2-content {
-  color: #FFFFFF !important;
-}
-.swal2-validation-message {
-  background-color: var(--color-primary) !important;
-}
+/* RECAPTCHA */
 #cap {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -490,6 +477,30 @@ tbody > tr:nth-child(even){/*Los tr hijos directos de tbody y que a su vez sean 
   margin-top: 8rem;
   width: 50%;
   transform: translate(50%, 5%);
+}
+
+
+
+.swal2-popup {
+  font-size: 16px !important;
+}
+.swal2-title {
+  color: #FFAA04 !important;
+}
+.swal2-content {
+  color: #FFFFFF !important;
+}
+.swal2-validation-message {
+  background-color: var(--color-primary) !important;
+}
+small {
+  color: var(--color-titles);
+}
+.capitalize {
+  text-transform: capitalize;
+}
+.uppercase {
+  text-transform: uppercase;
 }
 /*
  .swal2-active-progress-step{

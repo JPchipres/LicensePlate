@@ -12,8 +12,8 @@
     <nav>
         <ul>
             <li class="select"><a class="select" href="main.html">Bitácora General</a></li>
-            <li><a href="bitacoraResidente.html">Bitácora Residente</a></li>
-            <li><a href="bitacoraVisitante.html">Bitácora Visitante</a></li>
+            <!-- <li><a href="bitacoraResidente.html">Bitácora Residente</a></li>
+            <li><a href="bitacoraVisitante.html">Bitácora Visitante</a></li> -->
         </ul>
         <div class="buttonContainer">
             <button id="abrirPuerta">ABRIR PUERTA</button>
@@ -23,7 +23,7 @@
         <div class="bitacora">
             <div class="header">
                 <div class="titleContainer">
-                    <h1>Bitácora General</h1>
+                    <h1>BÍTACORA GENERAL</h1>
                 </div>
                 <div class="searchContainer">
                     <input type="search" name="buscador" id="buscador" placeholder="Buscar una Placa">
@@ -36,17 +36,23 @@
                       <tr>
                         <th width="5%">ID</th>
                         <th width="15%">Placa</th>
-                        <th width="25%">Fecha y Hora de Entrada</th>
-                        <th width="25%">Fecha y Hora de Salida</th>
-                        <th width="30%">Clase</th>
+                        <th width="30%">Fecha y Hora</th>
+                        <th width="30%">Estado</th>
+                        <th width="20%">Clase</th>
                       </tr>
                     </thead>
                     <tbody id="datos">
-
                     </tbody>
-                  </table>
-                  
+                  </table> 
+                  <nav>
+                    <ul id="paginationContainer" class="pagination">
+                      <li id="prevButton" class="page-item"><a class="page-link" href="#">Anterior</a></li>
+                      <li id="currentPage" class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li id="nextButton" class="page-item"><a class="page-link" href="#">Siguiente</a></li>
+                    </ul>
+                  </nav>  
             </div> 
+
         </div>
         <div class="sidebarContainer">
             <div class="sidebar">
@@ -54,36 +60,21 @@
                     <h1>Acciones <br> Rápidas</h1>
                 </div>
                 <div class="actionsContainer">
-                    <div>
+                        <button id="nuevoResidente">Nuevo <br> Residente</button>
                         <button id="nuevaPlacaResidente">Nueva Placa<br>Residente</button>
-                    </div>
-                    <div>
                         <button id="nuevaPlacaVisitante">Nueva Placa<br>Visitante</button>
-                    </div>
-                    <div>
-                        <button>Ver Bitácora<br>Residente</button>
-                    </div>
-                    <div>
-                        <button>Ver Bitácora<br>Visitante</button=>
-                    </div>
-                    <div>
                         <button id="nuevaExcepcion">Nueva<br>Excepción</button>
-                    </div>
-                    <div>
-                        <button type="submit" class="logoutBtn" id="logoutBtn">Cerrar<br>sesión</button>
-                    </div>
+                        <button>Cerrar <br> Sesión</button>
                 </div>
             </div>
         </div>
     </div>
     <script src="assets/frameworks/jquery-3.6.4.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="assets/js/app.js"></script>
-    <script type="module" src="assets/js/index.js"></script>
-        <!--CONEXION-->
-        <script type="module" src="conection.js" crossorigin="anonymous"></script>
-        <script type="module" src="app.js" crossorigin="anonymous"></script>
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js"></script>
+    <script type="module" src="assets/js/firebase.js"></script>
+    <script type="module" src="assets/js/alerts.js"></script>
 
 </body>
 </html>

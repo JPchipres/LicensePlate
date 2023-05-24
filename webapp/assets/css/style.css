@@ -533,4 +533,6 @@ small {
   text-align: center;
 } */
 
-
+.filter{ /*Clase para el buscador*/
+  display: none;
+}

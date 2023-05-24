@@ -324,7 +324,7 @@ $('#nuevaExcepcion').click(function() {
     {
       input:'text',
       title: 'Descripción',
-      text: 'Escriba una descripción del vehículo y cantidad de personas que transporta:',
+      text: 'Escriba una descripción del vehículo',
       inputValidator: (value) => {
         if (!value) {
           return 'Este campo es requerido';

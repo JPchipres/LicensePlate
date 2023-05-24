@@ -92,7 +92,7 @@ export const setPlateResident = (placa, residentID) => {
         const vehiculosRef = collection(residenteRef, "vehiculos");
         const nuevoVehiculo = {
           placa : placa,
-          estado : 1,
+          permiso : 1
         };
         const nuevoRegistro = {
           admission : new Date().toISOString(),
@@ -100,7 +100,8 @@ export const setPlateResident = (placa, residentID) => {
           descripcion : "",
           estado : "Ingreso",
           hora_salida : new Date().toISOString(),
-          placa : placa
+          placa : placa,
+          permiso : 1
         };
  
         // Establece un documento con el ID personalizado vehiculoID en la subcolección "vehiculos"
@@ -112,7 +113,7 @@ export const setPlateResident = (placa, residentID) => {
               text: `La placa: ${nuevoVehiculo.placa} se almacenó correctamente al residente con el ID: ${residentID}`,
               showConfirmButton: false,
               background: "#2c2c2c",
-              timer: 2000,
+              timer: 4000,
             });
             setDoc(doc(db,"placas",placa), nuevoRegistro)
             .then(() => {
@@ -174,10 +175,12 @@ export const setNewException = (tipo, placa, descripcion) => {
 
   const nuevaExcepcion = {
     admission : fechaHoraActual,
-    descripcion : descripcion,
-    placa : placa,
     clase : tipo,
-    estado : estado
+    descripcion : descripcion,
+    estado : estado,
+    hora_salida : fechaHoraActual,
+    placa : placa,
+    permiso : 1
   }
   setDoc(doc(placasRef,placa),nuevaExcepcion)
   .then(() => {
@@ -216,7 +219,7 @@ export const newResident = (nombre,casa,email,telefono) => {
   
   const residentesRef = collection(db, "residentes");
   const docRef = doc(residentesRef,telefono)
-  
+
   const nuevoResidente = {
     phone : telefono,
     name : nombre,
@@ -274,10 +277,18 @@ export const setPlateVisit = (placa, residentID) => {
         const vehiculosRef = collection(residenteRef, "visitantes");
 
         const nuevaVisita = {
-          placa: placa,
-          status: 1,
+          placa : placa,
+          permiso : 1,
         };
- 
+        const nuevoRegistro = {
+          admission : new Date().toISOString(),
+          clase : "VISITANTE",
+          descripcion : "",
+          estado : "Ingreso",
+          hora_salida : new Date().toISOString(),
+          placa : placa,
+          permiso : 1
+        };
         // Establece un documento con el ID personalizado vehiculoID en la subcolección "vehiculos"
         setDoc(doc(vehiculosRef, placa), nuevaVisita)
           .then(() => {
@@ -289,6 +300,25 @@ export const setPlateVisit = (placa, residentID) => {
               background: "#2c2c2c",
               timer: 2000,
             });
+            setDoc(doc(db,"placas",placa), nuevoRegistro)
+            .then(() => {
+              Swal.fire({
+                icon: "success",
+                title: "¡Actualización Exitosa!",
+                text: `La placa: ${nuevaVisita.placa} se almacenó correctamente en placas`,
+                showConfirmButton: false,
+                background: "#2c2c2c",
+                timer: 2000,
+              });
+          }).catch((error) => {
+            Swal.fire({
+              icon: "error",
+              title: "Ops...",
+              text: "Algo salió mal, por favor intentelo de nuevo",
+              footer: `${error}`,
+              background: "#2c2c2c",
+            });
+          });
           })
           .catch((error) => {
             Swal.fire({

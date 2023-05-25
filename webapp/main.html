@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+    <link rel="icon" type="image/x-icon" href="assets/img/logo.jpg">
     <title>Bitácora General</title>
 </head>
 <body>
@@ -26,13 +27,13 @@
                     <h1>BÍTACORA GENERAL</h1>
                 </div>
                 <div class="searchContainer">
-                    <input type="search" name="buscador" id="buscador" placeholder="Buscar una Placa">
+                    <input class="buscador" type="search" name="buscador" id="buscador" placeholder="Buscar una Placa">
                     <button type="submit"><i class="bi bi-search"></i></button>
                 </div>
             </div>
-            <div class="tableContainer">
-                <table>
-                    <thead>
+            <div class="tableContainer" id="tableContainer">
+                <table id="table" class="table">
+                    <thead> 
                       <tr>
                         <th width="5%">ID</th>
                         <th width="15%">Placa</th>
@@ -42,17 +43,17 @@
                       </tr>
                     </thead>
                     <tbody id="datos">
+
                     </tbody>
-                  </table> 
+                  </table>
                   <nav>
                     <ul id="paginationContainer" class="pagination">
                       <li id="prevButton" class="page-item"><a class="page-link" href="#">Anterior</a></li>
                       <li id="currentPage" class="page-item"><a class="page-link" href="#">1</a></li>
                       <li id="nextButton" class="page-item"><a class="page-link" href="#">Siguiente</a></li>
                     </ul>
-                  </nav>  
+                  </nav> 
             </div> 
-
         </div>
         <div class="sidebarContainer">
             <div class="sidebar">
@@ -64,17 +65,16 @@
                         <button id="nuevaPlacaResidente">Nueva Placa<br>Residente</button>
                         <button id="nuevaPlacaVisitante">Nueva Placa<br>Visitante</button>
                         <button id="nuevaExcepcion">Nueva<br>Excepción</button>
-                        <button>Cerrar <br> Sesión</button>
+                        <button onclick="location.href='index.html';">Cerrar <br> Sesión</button>
                 </div>
             </div>
         </div>
     </div>
     <script src="assets/frameworks/jquery-3.6.4.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js"></script>
     <script type="module" src="assets/js/firebase.js"></script>
     <script type="module" src="assets/js/alerts.js"></script>
-
+    <script type="module" src="assets/js/list.js"></script>
 </body>
 </html>

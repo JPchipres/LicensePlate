@@ -18,20 +18,22 @@ const table = document.getElementById('datos');
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
-
+const postList = document.querySelector('.tableContainer');
 window.addEventListener('DOMContentLoaded', async () => {
   const itemsPerPage = 5; // Número de elementos por página
   let currentPage = 1; // Página actual
   let totalItems = 0;
   let totalPages = 0;
   let currentItems = [];
+
+  // Obtén una referencia a la colección "tuColeccion" en Firestore
   const tuColeccion = collection(db, 'registro');
   const q = query(tuColeccion);
 
+  // Agrega un listener que se ejecutará cada vez que se agregue, modifique o elimine un documento en la colección
   onSnapshot(q, (snapshot) => {
     totalItems = snapshot.size;
     totalPages = Math.ceil(totalItems / itemsPerPage);
-
     let i = 1;
     let html = '';
 
@@ -39,104 +41,108 @@ window.addEventListener('DOMContentLoaded', async () => {
       html = '<tr><td colspan="5">No hay entradas aún</td></tr>';
       table.innerHTML = html;
     }
+    // Recorre los documentos de la colección y actualiza la tabla con los datos actualizados
     currentItems = [];
-    snapshot.forEach((data) => {
-      const doc = data.data();
+    snapshot.forEach(data => {
+      const placa = data.data().placa;
       const num = i++;
-      const timestamp = doc.fecha_hora;
-      const date = timestamp.toDate();
-      const fechaHora = date.toLocaleString();
+      const fechaHora = data.data().fecha_hora;
+      const estado = data.data().estado;
+      const clase = data.data().clase;
       currentItems.push(`
-        <tr>
+        <tr class="data"> 
           <td>${num}</td>
-          <td>${doc.placa}</td>
-          <td>${fechaHora}</td>
-          <td>${doc.estado}</td>
-          <td>${doc.clase}</td>
+          <td>${placa}</td>
+          <td>${fechaHora.toDate().toLocaleDateString()}, ${fechaHora.toDate().getHours()}:${fechaHora.toDate().getMinutes()}</td>
+          <td>${estado}</td>
+          <td>${clase}</td>
         </tr>
       `);
-    });
-    updateTable();
-    updatePagination();
   });
-
-  function updateTable() {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const itemsToShow = currentItems.slice(startIndex, endIndex);
-    table.innerHTML = itemsToShow.join('');
-  }
-
-  function updatePagination() {
-    const prevButton = document.getElementById('prevButton');
-    const nextButton = document.getElementById('nextButton');
-    const currentPageSpan = document.getElementById('currentPage');
-    const paginationContainer = document.getElementById('paginationContainer');
-    currentPageSpan.innerText = currentPage.toString();
-
-    while (paginationContainer.firstChild) {
-      paginationContainer.firstChild.remove();
-    }
-    const paginationList = document.createElement('ul');
-    paginationList.classList.add('pagination');
-
-    const prevItem = createPaginationItem('Anterior', currentPage > 1, () => {
-      if (currentPage > 1) {
-        goToPage(currentPage - 1);
-      }
-    });
-    paginationList.appendChild(prevItem);
-
-    for (let page = 1; page <= totalPages; page++) {
-      const pageItem = createPaginationItem(page.toString(), page !== currentPage, () => {
-        if (page !== currentPage) {
-          goToPage(page);
-        }
-      });
-      paginationList.appendChild(pageItem);
-    }
-    const nextItem = createPaginationItem('Siguiente', currentPage < totalPages, () => {
-      if (currentPage < totalPages) {
-        goToPage(currentPage + 1);
-      }
-    });
-    paginationList.appendChild(nextItem);
-    paginationContainer.appendChild(paginationList);
-
-    function createPaginationItem(text, enabled, onClick) {
-      const listItem = document.createElement('li');
-      listItem.classList.add('page-item');
-
-      const link = document.createElement('a');
-      link.classList.add('page-link');
-      link.href = '#';
-      link.innerText = text;
-      link.addEventListener('click', onClick);
-
-      if (!enabled) {
-        listItem.classList.add('disabled');
-      }
-
-      listItem.appendChild(link);
-
-      return listItem;
-    }
-  }
-
-  function goToPage(page) {
-    currentPage = page;
-    updateTable();
-    updatePagination();
-  }
-
-  document.getElementById('nextButton').addEventListener('click', () => {
-    if (currentPage < totalPages) {
-    goToPage(currentPage + 1);
-    }
-    });
+  updateTable();
+  updatePagination();
 });
+function updateTable() {
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const itemsToShow = currentItems.slice(startIndex, endIndex);
+  table.innerHTML = itemsToShow.join('');
+}
 
+function updatePagination() {
+  const prevButton = document.getElementById('prevButton');
+  const nextButton = document.getElementById('nextButton');
+  const currentPageSpan = document.getElementById('currentPage');
+  const paginationContainer = document.getElementById('paginationContainer');
+  currentPageSpan.innerText = currentPage.toString();
 
+  while (paginationContainer.firstChild) {
+    paginationContainer.firstChild.remove();
+  }
+  const paginationList = document.createElement('ul');
+  paginationList.classList.add('pagination');
+
+  const prevItem = createPaginationItem('Anterior', currentPage > 1, () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
+  });
+  paginationList.appendChild(prevItem);
+
+  for (let page = 1; page <= totalPages; page++) {
+    const pageItem = createPaginationItem(page.toString(), page !== currentPage, () => {
+      if (page !== currentPage) {
+        goToPage(page);
+      }
+    });
+    paginationList.appendChild(pageItem);
+  }
+  const nextItem = createPaginationItem('Siguiente', currentPage < totalPages, () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  });
+  paginationList.appendChild(nextItem);
+  paginationContainer.appendChild(paginationList);
+
+  function createPaginationItem(text, enabled, onClick) {
+    const listItem = document.createElement('li');
+    listItem.classList.add('page-item');
+    const link = document.createElement('a');
+    link.classList.add('page-link');
+    link.href = '#';
+    link.innerText = text;
+    link.addEventListener('click', onClick);
+    listItem.appendChild(link);
+    return listItem;
+  }
+}
+function setActivePage(pageNumber) {
+  const paginationContainer = document.getElementById('paginationContainer');
+  const pages = paginationContainer.querySelectorAll('.page-item');
+
+  pages.forEach((page) => {
+    page.classList.remove('active');
+    const pageLink = page.querySelector('.page-link');
+    if (pageLink.innerText === pageNumber.toString()) {
+      page.classList.add('active');
+    }
+  });
+}
+
+function goToPage(page) {
+  currentPage = page;
+  setActivePage(page);
+  updateTable();
+  updatePagination();
+}
+
+document.getElementById('nextButton').addEventListener('click', () => {
+  if (currentPage < totalPages) {
+  goToPage(currentPage + 1);
+  }
+  });
+});
 
 // Funcion que trae los datos de la bd
 export const getData = () =>  getDocs(collection(db, 'placas'))
@@ -151,10 +157,18 @@ export const setPlateResident = (placa, residentID) => {
     .then((docSnapshot) => {
       if (docSnapshot.exists()) {
         const vehiculosRef = collection(residenteRef, "vehiculos");
-
         const nuevoVehiculo = {
           placa : placa,
-          estado : 1,
+          permiso : 1
+        };
+        const nuevoRegistro = {
+          admission : new Date().toISOString(),
+          clase : "RESIDENTE",
+          descripcion : "",
+          estado : "Ingreso",
+          hora_salida : new Date().toISOString(),
+          placa : placa,
+          permiso : 1
         };
  
         // Establece un documento con el ID personalizado vehiculoID en la subcolección "vehiculos"
@@ -166,8 +180,28 @@ export const setPlateResident = (placa, residentID) => {
               text: `La placa: ${nuevoVehiculo.placa} se almacenó correctamente al residente con el ID: ${residentID}`,
               showConfirmButton: false,
               background: "#2c2c2c",
+              timer: 4000,
+            });
+            setDoc(doc(db,"placas",placa), nuevoRegistro)
+            .then(() => {
+            Swal.fire({
+              icon: "success",
+              title: "¡Registrado Exitosamente!",
+              text: `La placa: ${nuevoVehiculo.placa} se almacenó correctamente en placas con el ID: ${residentID}`,
+              showConfirmButton: false,
+              background: "#2c2c2c",
               timer: 2000,
             });
+          })
+          .catch((error) => {
+            Swal.fire({
+              icon: "error",
+              title: "Ops...",
+              text: "Algo salió mal, por favor intentelo de nuevo",
+              footer: `${error}`,
+              background: "#2c2c2c",
+            });
+          });
           })
           .catch((error) => {
             Swal.fire({
@@ -200,7 +234,6 @@ export const setPlateResident = (placa, residentID) => {
       });
     });
 }
-
 // Funcion que almacena una nueva entrada de excepcion dentro de la base de datos
 export const setNewException = (tipo, placa, descripcion) => {
   const placasRef = collection(db,'placas')
@@ -209,10 +242,12 @@ export const setNewException = (tipo, placa, descripcion) => {
 
   const nuevaExcepcion = {
     admission : fechaHoraActual,
-    descripcion : descripcion,
-    placa : placa,
     clase : tipo,
-    estado : estado
+    descripcion : descripcion,
+    estado : estado,
+    hora_salida : fechaHoraActual,
+    placa : placa,
+    permiso : 1
   }
   setDoc(doc(placasRef,placa),nuevaExcepcion)
   .then(() => {
@@ -251,7 +286,7 @@ export const newResident = (nombre,casa,email,telefono) => {
   
   const residentesRef = collection(db, "residentes");
   const docRef = doc(residentesRef,telefono)
-  
+
   const nuevoResidente = {
     phone : telefono,
     name : nombre,
@@ -309,10 +344,18 @@ export const setPlateVisit = (placa, residentID) => {
         const vehiculosRef = collection(residenteRef, "visitantes");
 
         const nuevaVisita = {
-          placa: placa,
-          status: 1,
+          placa : placa,
+          permiso : 1,
         };
- 
+        const nuevoRegistro = {
+          admission : new Date().toISOString(),
+          clase : "VISITANTE",
+          descripcion : "",
+          estado : "Ingreso",
+          hora_salida : new Date().toISOString(),
+          placa : placa,
+          permiso : 1
+        };
         // Establece un documento con el ID personalizado vehiculoID en la subcolección "vehiculos"
         setDoc(doc(vehiculosRef, placa), nuevaVisita)
           .then(() => {
@@ -324,6 +367,25 @@ export const setPlateVisit = (placa, residentID) => {
               background: "#2c2c2c",
               timer: 2000,
             });
+            setDoc(doc(db,"placas",placa), nuevoRegistro)
+            .then(() => {
+              Swal.fire({
+                icon: "success",
+                title: "¡Actualización Exitosa!",
+                text: `La placa: ${nuevaVisita.placa} se almacenó correctamente en placas`,
+                showConfirmButton: false,
+                background: "#2c2c2c",
+                timer: 2000,
+              });
+          }).catch((error) => {
+            Swal.fire({
+              icon: "error",
+              title: "Ops...",
+              text: "Algo salió mal, por favor intentelo de nuevo",
+              footer: `${error}`,
+              background: "#2c2c2c",
+            });
+          });
           })
           .catch((error) => {
             Swal.fire({

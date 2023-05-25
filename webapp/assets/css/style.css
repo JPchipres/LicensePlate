@@ -502,6 +502,9 @@ small {
 .uppercase {
   text-transform: uppercase;
 }
+.page-item.active{
+  border-bottom: 3px solid #6f6c6c;
+}
 /*
  .swal2-active-progress-step{
   background-color: var(--color-titles) !important;
@@ -533,4 +536,6 @@ small {
   text-align: center;
 } */
 
-
+.filter{ /*Clase para el buscador*/
+  display: none;
+}
